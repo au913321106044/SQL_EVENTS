@@ -1,0 +1,390 @@
+-- CREATE DATABASE 
+CREATE DATABASE EVENT_TICKETING_SYSTEM;
+USE EVENT_TICKETING_SYSTEM;
+
+-- EVENTS TABLE
+CREATE TABLE Events (
+    EventID INT PRIMARY KEY AUTO_INCREMENT,
+    EventName VARCHAR(100) NOT NULL,
+    EventDate DATE NOT NULL,
+    Venue VARCHAR(100),
+    TotalTickets INT NOT NULL,
+    TicketPrice DECIMAL(10,2) NOT NULL
+);
+DESC EVENTS;
+
+-- CUSTOMERS TABLE
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY AUTO_INCREMENT,
+    CustomerName VARCHAR(100),
+    Email VARCHAR(100) UNIQUE,
+    Phone VARCHAR(15)
+);
+
+-- TICKETS TABLE
+CREATE TABLE Tickets (
+    TicketID INT PRIMARY KEY AUTO_INCREMENT,
+    EventID INT,
+    Status ENUM('Available', 'Reserved', 'Sold') DEFAULT 'Available',
+    FOREIGN KEY (EventID) REFERENCES Events(EventID)
+);
+DESC TICKETS;
+
+-- RESERVATIONS TABLE
+CREATE TABLE Reservations (
+    ReservationID INT PRIMARY KEY AUTO_INCREMENT,
+    CustomerID INT,
+    TicketID INT,
+    ReservationDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+    FOREIGN KEY (TicketID) REFERENCES Tickets(TicketID)
+);
+DESC RESERVATIONS;
+
+-- SALES TABLE
+CREATE TABLE Sales (
+    SaleID INT PRIMARY KEY AUTO_INCREMENT,
+    TicketID INT,
+    CustomerID INT,
+    SaleDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Amount DECIMAL(10,2),
+    FOREIGN KEY (TicketID) REFERENCES Tickets(TicketID),
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+DESC SALES;
+
+-- EVENT TABLE VALUES INSERTION
+INSERT INTO Events (EventName, EventDate, Venue, TotalTickets, TicketPrice) VALUES
+('Rock Fest 2025', '2025-11-15', 'City Arena', 100, 50.00),
+('Tech Conference', '2025-12-02', 'Tech Hub', 150, 75.00),
+('Food Carnival', '2025-11-20', 'Central Park', 200, 20.00),
+('Comedy Night', '2025-11-25', 'Laugh Lounge', 80, 30.00),
+('Film Premiere', '2025-12-10', 'Grand Cinema', 120, 40.00),
+('Jazz Night', '2025-11-28', 'Music Hall', 60, 35.00),
+('Startup Meetup', '2025-12-05', 'Innovation Center', 90, 25.00),
+('Book Fair', '2025-12-15', 'Library Plaza', 300, 10.00),
+('Charity Gala', '2025-12-20', 'Hotel Royale', 100, 100.00),
+('Dance Festival', '2025-11-30', 'City Square', 150, 45.00),
+('Art Exhibition', '2025-12-08', 'Art Gallery', 50, 20.00),
+('Coding Hackathon', '2025-12-12', 'Tech Arena', 80, 15.00),
+('Gaming Expo', '2025-12-18', 'Expo Center', 200, 60.00),
+('Music Awards', '2025-12-25', 'Stadium A', 120, 90.00),
+('Science Fair', '2025-11-22', 'Community Center', 100, 12.00),
+('Cultural Fest', '2025-12-28', 'Town Hall', 150, 25.00),
+('Wine Tasting', '2025-11-29', 'Vineyard Estate', 70, 55.00),
+('Theatre Play', '2025-12-03', 'Drama House', 60, 40.00),
+('Charity Run', '2025-11-18', 'River Park', 250, 15.00),
+('Winter Wonderland', '2025-12-24', 'Downtown Square', 300, 20.00);
+SELECT*FROM EVENTS;
+
+-- CUSTOMERS TABLE VALUES INSERTION
+INSERT INTO Customers (CustomerName, Email, Phone) VALUES
+('Alice Johnson', 'alice@gmail.com', '111-111-1111'),
+('Bob Smith', 'bob@gmail.com', '111-111-1112'),
+('Charlie Brown', 'charlie@gmail.com', '111-111-1113'),
+('Diana Ross', 'diana@gmail.com', '111-111-1114'),
+('Ethan Clark', 'ethan@gmail.com', '111-111-1115'),
+('Fiona Adams', 'fiona@gmail.com', '111-111-1116'),
+('George Hall', 'george@gmail.com', '111-111-1117'),
+('Hannah Lee', 'hannah@gmail.com', '111-111-1118'),
+('Ian Miller', 'ian@gmail.com', '111-111-1119'),
+('Jane Davis', 'jane@gmail.com', '111-111-1120'),
+('Kevin White', 'kevin@gmail.com', '111-111-1121'),
+('Laura King', 'laura@gmail.com', '111-111-1122'),
+('Michael Scott', 'michael@gmail.com', '111-111-1123'),
+('Nina Lopez', 'nina@gmail.com', '111-111-1124'),
+('Oscar Reed', 'oscar@gmail.com', '111-111-1125'),
+('Paula Green', 'paula@gmail.com', '111-111-1126'),
+('Quinn Young', 'quinn@gmail.com', '111-111-1127'),
+('Rachel Wood', 'rachel@gmail.com', '111-111-1128'),
+('Steve Brown', 'steve@gmail.com', '111-111-1129'),
+('Tina Evans', 'tina@gmail.com', '111-111-1130');
+SELECT*FROM CUSTOMERS;
+
+-- TICKETS TABLE VALUES INSERTION
+INSERT INTO Tickets (EventID, Status) VALUES
+(1, 'Available'),
+(1, 'Sold'),
+(2, 'Reserved'),
+(3, 'Available'),
+(4, 'Sold'),
+(5, 'Available'),
+(6, 'Available'),
+(7, 'Sold'),
+(8, 'Reserved'),
+(9, 'Available'),
+(10, 'Sold'),
+(11, 'Available'),
+(12, 'Available'),
+(13, 'Sold'),
+(14, 'Available'),
+(15, 'Reserved'),
+(16, 'Available'),
+(17, 'Sold'),
+(18, 'Available'),
+(19, 'Available'),
+(20, 'Available');
+SELECT*FROM TICKETS;
+
+-- RESERVATIONS TABLE VALUES INSERTION
+INSERT INTO Reservations (CustomerID, TicketID, ReservationDate) VALUES
+(1, 3, '2025-10-10 10:00:00'),
+(2, 8, '2025-10-11 12:00:00'),
+(3, 15, '2025-10-12 14:00:00'),
+(4, 9, '2025-10-13 16:00:00'),
+(5, 2, '2025-10-14 17:00:00'),
+(6, 5, '2025-10-15 18:00:00'),
+(7, 10, '2025-10-16 19:00:00'),
+(8, 11, '2025-10-17 20:00:00'),
+(9, 7, '2025-10-18 21:00:00'),
+(10, 6, '2025-10-19 09:00:00'),
+(11, 4, '2025-10-20 10:00:00'),
+(12, 12, '2025-10-21 11:00:00'),
+(13, 13, '2025-10-22 12:00:00'),
+(14, 16, '2025-10-23 13:00:00'),
+(15, 17, '2025-10-24 14:00:00'),
+(16, 18, '2025-10-25 15:00:00'),
+(17, 19, '2025-10-26 16:00:00'),
+(18, 20, '2025-10-27 17:00:00'),
+(19, 1, '2025-10-28 18:00:00'),
+(20, 14, '2025-10-29 19:00:00');
+SELECT*FROM RESERVATIONS;
+
+-- SALES TABLE VALUES INSERTION
+INSERT INTO Sales (TicketID, CustomerID, SaleDate, Amount) VALUES
+(2, 5, '2025-10-12 12:00:00', 50.00),
+(4, 11, '2025-10-13 13:00:00', 30.00),
+(7, 9, '2025-10-14 14:00:00', 25.00),
+(10, 7, '2025-10-15 15:00:00', 45.00),
+(13, 13, '2025-10-16 16:00:00', 60.00),
+(17, 15, '2025-10-17 17:00:00', 40.00),
+(1, 19, '2025-10-18 18:00:00', 50.00),
+(8, 2, '2025-10-19 19:00:00', 20.00),
+(9, 4, '2025-10-20 20:00:00', 100.00),
+(12, 12, '2025-10-21 21:00:00', 15.00),
+(14, 20, '2025-10-22 22:00:00', 90.00),
+(15, 3, '2025-10-23 23:00:00', 12.00),
+(16, 14, '2025-10-24 09:00:00', 25.00),
+(18, 16, '2025-10-25 10:00:00', 40.00),
+(19, 17, '2025-10-26 11:00:00', 15.00),
+(20, 18, '2025-10-27 12:00:00', 20.00),
+(3, 1, '2025-10-28 13:00:00', 75.00),
+(5, 6, '2025-10-29 14:00:00', 40.00),
+(6, 10, '2025-10-30 15:00:00', 35.00),
+(11, 8, '2025-10-31 16:00:00', 20.00);
+SELECT*FROM SALES;
+
+-- JOIN Query--
+-- List all ticket sales with event and customer details.
+
+SELECT 
+    s.SaleID,
+    e.EventName,
+    c.CustomerName,
+    s.SaleDate,
+    s.Amount
+FROM Sales s
+JOIN Customers c ON s.CustomerID = c.CustomerID
+JOIN Tickets t ON s.TicketID = t.TicketID
+JOIN Events e ON t.EventID = e.EventID;
+
+-- View--
+-- Create a view to easily see total sales per event.
+
+CREATE VIEW EventSalesSummary AS
+SELECT 
+    e.EventName,
+    COUNT(s.SaleID) AS TotalTicketsSold,
+    SUM(s.Amount) AS TotalRevenue
+FROM Events e
+LEFT JOIN Tickets t ON e.EventID = t.EventID
+LEFT JOIN Sales s ON s.TicketID = t.TicketID
+GROUP BY e.EventName;
+
+SELECT * FROM EventSalesSummary;
+
+-- Subquery--
+-- Find events where more than 50% of tickets are sold.
+
+SELECT e.EventID, e.EventName, e.TotalTickets,
+       COUNT(t.TicketID) AS SoldCount,
+       (COUNT(t.TicketID) / e.TotalTickets) * 100 AS PercentSold
+FROM Events e
+JOIN Tickets t ON e.EventID = t.EventID AND t.Status = 'Sold'
+GROUP BY e.EventID, e.EventName, e.TotalTickets
+HAVING COUNT(t.TicketID) > (e.TotalTickets / 2);
+
+-- Trigger--
+-- Automatically mark a ticket as “Sold” when a sale is recorded.
+
+CREATE TRIGGER after_ticket_sale
+AFTER INSERT ON Sales
+FOR EACH ROW
+UPDATE Tickets
+SET Status = 'Sold'
+WHERE TicketID = NEW.TicketID;
+SHOW TRIGGERS FROM SUB_QUERY;
+
+-- Find all events happening in a specific date range
+SELECT EventName, EventDate, Venue FROM Events WHERE EventDate BETWEEN '2025-11-01' AND '2025-12-31';
+
+-- Find tickets that are available (not reserved or sold)
+SELECT TicketID, EventID,  Status FROM Tickets
+WHERE Status = 'Available';
+
+-- Find events that happen in Music hall--
+SELECT * FROM Events WHERE Venue = 'Music Hall';
+
+-- Find customers who are from Chennai OR Coimbatore --
+SELECT * FROM Customers WHERE City = 'Chennai' OR City = 'Coimbatore';
+
+-- AGGREGATE FUNCTION -- 
+-- Find total number of events --
+SELECT COUNT(*) AS Total_Events FROM Events;
+
+-- Find average ticket  --
+SELECT AVG(Amount) AS Average_sales_amount FROM Sales;
+
+--  Find the highest ticket price--
+SELECT MAX(TicketPrice) AS Highest_Ticket_Price FROM Events;
+
+-- . Find the lowest ticket price--
+SELECT MIN(TicketPrice) AS Lowest_Ticket_Price FROM events;
+
+-- Find total sales amount--
+SELECT SUM(Amount) AS Total_Sales FROM Sales;
+
+-- Find events name end at concerts --
+SELECT *  FROM Events WHERE EventName LIKE '%Concert%';
+
+-- list customer table first 5 line only --
+SELECT * FROM Customers LIMIT 5;
+
+-- STRING FUNCTIONS --
+-- Converts all event names to uppercase letters
+
+SELECT UPPER(EventName) AS EventInUpperCase FROM Events;
+
+-- Displays all customer names in lowercase.
+
+SELECT LOWER(CustomerName) AS CustomerInLowerCase
+FROM Customers;
+
+-- Shows the number of characters in each customer’s name
+
+SELECT CustomerName, LENGTH(CustomerName) AS NameLength FROM Customers;
+
+-- Combines customer name and email into a single column.
+
+SELECT CONCAT(CustomerName, ' - ', Email) AS CustomerDetails
+FROM Customers;
+
+-- Displays only the first 5 characters of each event name.
+
+SELECT EventName, SUBSTRING(EventName, 1, 5) AS ShortName
+FROM Events;
+
+-- Stored Procedure--
+-- Fetch total sales count and total revenue for a given event.
+
+DELIMITER $$
+
+CREATE PROCEDURE GetEventSalesSummary(IN eventId INT)
+BEGIN
+    SELECT 
+        e.EventName,
+        COUNT(s.SaleID) AS TicketsSold,
+        IFNULL(SUM(s.Amount), 0) AS TotalRevenue
+    FROM Events e
+    LEFT JOIN Tickets t ON e.EventID = t.EventID
+    LEFT JOIN Sales s ON s.TicketID = t.TicketID
+    WHERE e.EventID = eventId
+    GROUP BY e.EventName;
+END $$
+
+-- Show upcoming events happening in the next 30 days
+
+SELECT eventName, eventDate, venue
+FROM Events
+WHERE eventDate BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY);
+
+-- Find total revenue generated per event (JOIN + GROUP BY)
+
+SELECT 
+    e.eventName,
+    SUM(s.amount) AS total_revenue
+FROM Sales s
+JOIN Reservations r ON s.CUSTOMERID = r.CUSTOMERID
+JOIN Tickets t ON r.ticketID = t.ticketID
+JOIN Events e ON t.eventID = e.eventID
+GROUP BY e.eventname
+ORDER BY total_revenue DESC;
+
+-- Show top 3 customers who spent the most
+
+SELECT 
+    c.customerName,
+    SUM(s.amount) AS total_spent
+FROM Sales s
+JOIN Reservations r ON s.CUSTOMERID = r.CUSTOMERID
+JOIN Customers c ON r.customerid = c.customerid
+GROUP BY c.customerName
+ORDER BY total_spent DESC
+LIMIT 3;
+
+-- Find all reservations that have not yet been converted to sales
+
+SELECT 
+    r.reservationid,
+    c.customerName,
+    e.eventName,
+    T.status
+FROM Reservations r
+JOIN Customers c ON r.customerid = c.customerid
+JOIN Tickets t ON r.ticketid = t.ticketid
+JOIN Events e ON t.eventid = e.eventid
+WHERE r.reservationid NOT IN (SELECT reservationid FROM Sales);
+
+-- View Top 10 Sales from the SalesReport View
+
+SELECT * FROM Sales
+ORDER BY Amount DESC
+LIMIT 10;
+DELIMITER ;
+CALL GetEventSalesSummary(1);
+
+-- Available tickets for an event:
+
+SELECT COUNT(*) AS AvailableTickets
+FROM Tickets
+WHERE EventID = 1 AND Status = 'Available';
+
+-- Top 3 events by revenue:
+
+SELECT EventName, TotalRevenue
+FROM EventSalesSummary
+ORDER BY TotalRevenue DESC
+LIMIT 3;
+
+-- Find average ticket price per event
+SELECT 
+    c.CustomerName,
+    AVG(s.amount) AS avg_sales_amount
+FROM Customers c
+JOIN Sales s ON c.CustomerID=s.CustomerID
+GROUP BY c.CustomerName;
+
+#Find customers name with ticket price
+SELECT e.eventName
+FROM Events e
+WHERE e.eventId NOT IN (
+    SELECT DISTINCT t.eventId
+    FROM Tickets t
+    JOIN Reservations r ON t.ticketId = r.ticketId
+    JOIN Sales s ON r.CustomerID = s.CustomerID
+);
+
+-- Call Stored Procedure for Multiple Events
+
+CALL GetEventSalesSummary(6);
+CALL GetEventSalesSummary(18);
